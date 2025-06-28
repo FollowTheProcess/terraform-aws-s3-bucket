@@ -1,4 +1,6 @@
 resource "aws_s3_bucket" "this" {
+  # checkov:skip=CKV2_AWS_62:Ensure S3 buckets should have event notifications enabled. Not supported.
+  # checkov:skip=CKV_AWS_144:Ensure that S3 bucket has cross-region replication enabled. Not supported.
   region        = var.region == "" ? data.aws_region.current.region : var.region
   bucket        = var.name
   force_destroy = var.force_destroy
