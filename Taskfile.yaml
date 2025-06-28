@@ -1,0 +1,49 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  default:
+    desc: List all available tasks
+    silent: true
+    cmds:
+      - task --list
+
+  fmt:
+    desc: Run terraform fmt
+    cmds:
+      - terraform fmt -recursive
+
+  docs:
+    desc: Generate Terraform documentation
+    cmds:
+      - terraform-docs .
+
+  check:
+    desc: Run the linters
+    deps:
+      - fmt
+    preconditions:
+      - sh: command -v tflint
+        msg: Requires tflint, run `brew install tflint`
+
+      - sh: command -v checkov
+        msg: Requires checkov, run `brew install checkov`
+    cmds:
+      - terraform validate
+      - tflint --recursive
+      - checkov -d . --quiet --config-file .checkov.yaml
+
+  init:
+    desc: Initialise terraform
+    preconditions:
+      - sh: command -v tflint
+        msg: Requires tflint, run `brew install tflint`
+    cmds:
+      - terraform init
+      - tflint --init
+
+  plan:
+    desc: Run a terraform plan
+    cmds:
+      - terraform plan

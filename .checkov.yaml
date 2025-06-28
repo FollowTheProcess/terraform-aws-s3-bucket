@@ -1,0 +1,3 @@
+framework:
+  - all
+download-external-modules: true
