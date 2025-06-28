@@ -1,3 +1,6 @@
 framework:
   - all
 download-external-modules: true
+skip-check:
+  - CKV_AWS_144 # Ensure that S3 buckets have cross-region replication enabled
+  - CKV2_AWS_62 # Ensure S3 buckets have event notifications enabled

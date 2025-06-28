@@ -1,6 +1,4 @@
 resource "aws_s3_bucket" "this" {
-  # checkov:skip=CKV2_AWS_62:Ensure S3 buckets should have event notifications enabled. Not supported.
-  # checkov:skip=CKV_AWS_144:Ensure that S3 bucket has cross-region replication enabled. Not supported.
   region        = var.region == "" ? data.aws_region.current.region : var.region
   bucket        = var.name
   force_destroy = var.force_destroy
@@ -52,11 +50,11 @@ resource "aws_s3_bucket_policy" "this" {
 }
 
 resource "aws_s3_bucket_logging" "this" {
-  count = var.logging_bucket_arn == "" ? 0 : 1
+  count = var.logging_bucket_name == "" ? 0 : 1
 
   bucket = aws_s3_bucket.this.id
 
-  target_bucket = var.logging_bucket_arn
+  target_bucket = var.logging_bucket_name
   target_prefix = "logs/s3/${var.name}/"
   target_object_key_format {
     partitioned_prefix {
