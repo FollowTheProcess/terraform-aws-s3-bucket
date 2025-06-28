@@ -44,8 +44,8 @@ variable "bucket_policy_documents" {
   default     = []
 }
 
-variable "logging_bucket_arn" {
-  description = "The ARN of another S3 bucket into which to write access logs for this bucket. If omitted, access logging is not enabled"
+variable "logging_bucket_name" {
+  description = "The name of another S3 bucket into which to write access logs for this bucket. If omitted, access logging is not enabled"
   type        = string
   default     = ""
 }
