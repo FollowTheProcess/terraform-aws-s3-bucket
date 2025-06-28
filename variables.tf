@@ -60,7 +60,7 @@ variable "lifecycle_configuration" {
   description = "Simple bucket object lifecycle configuration with configurable expiry time. If needs are more complicated, use the module output `id` to attach your own configuration"
   type = object({
     enabled         = bool
-    expiration_days = number
+    expiration_days = optional(number, 30)
   })
   default = {
     enabled         = true
