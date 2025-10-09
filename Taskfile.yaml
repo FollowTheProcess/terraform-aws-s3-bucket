@@ -19,6 +19,11 @@ tasks:
     cmds:
       - terraform-docs .
 
+  test:
+    desc: Run Terraform tests
+    cmds:
+      - terraform test
+
   check:
     desc: Run the linters
     deps:
@@ -30,6 +35,7 @@ tasks:
       - sh: command -v checkov
         msg: Requires checkov, run `brew install checkov`
     cmds:
+      - task: test
       - terraform validate
       - tflint --recursive
       - checkov -d . --quiet --config-file .checkov.yaml
