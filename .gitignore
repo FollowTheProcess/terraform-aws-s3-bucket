@@ -54,6 +54,7 @@ Temporary Items
 .terraform
 .external_modules/
 **/.terraform/*
+.terraform-lock.hcl
 
 # .tfstate files
 *.tfstate
