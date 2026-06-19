@@ -38,6 +38,12 @@ variable "kms_key_arn" {
   default     = ""
 }
 
+variable "enforce_encryption" {
+  description = "Attach the policy statements adding an explicit deny for unencrypted uploads. S3 encrypts at rest by default, this simply adds an explicit deny"
+  type        = bool
+  default     = true
+}
+
 variable "bucket_policy_documents" {
   description = "List of iam policy documents to apply to the bucket. Will be merged with default policy documents enforcing HTTPS and SSE"
   type        = list(string)

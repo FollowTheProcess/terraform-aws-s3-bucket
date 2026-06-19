@@ -3,39 +3,45 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 data "aws_iam_policy_document" "default_bucket_policy" {
-  statement {
-    sid       = "DenyIncorrectEncryptionHeader"
-    effect    = "Deny"
-    actions   = ["s3:PutObject"]
-    resources = ["${aws_s3_bucket.this.arn}/*"]
+  dynamic "statement" {
+    for_each = var.enforce_encryption ? [1] : []
+    content {
+      sid       = "DenyIncorrectEncryptionHeader"
+      effect    = "Deny"
+      actions   = ["s3:PutObject"]
+      resources = ["${aws_s3_bucket.this.arn}/*"]
 
-    principals {
-      identifiers = ["*"]
-      type        = "*"
-    }
+      principals {
+        identifiers = ["*"]
+        type        = "*"
+      }
 
-    condition {
-      test     = "StringNotEquals"
-      variable = "s3:x-amz-server-side-encryption"
-      values   = [var.kms_key_arn == "" ? "AES256" : "aws:kms"]
+      condition {
+        test     = "StringNotEquals"
+        variable = "s3:x-amz-server-side-encryption"
+        values   = [var.kms_key_arn == "" ? "AES256" : "aws:kms"]
+      }
     }
   }
 
-  statement {
-    sid       = "DenyUnencryptedUploads"
-    effect    = "Deny"
-    actions   = ["s3:PutObject"]
-    resources = ["${aws_s3_bucket.this.arn}/*"]
+  dynamic "statement" {
+    for_each = var.enforce_encryption ? [1] : [0]
+    content {
+      sid       = "DenyUnencryptedUploads"
+      effect    = "Deny"
+      actions   = ["s3:PutObject"]
+      resources = ["${aws_s3_bucket.this.arn}/*"]
 
-    principals {
-      identifiers = ["*"]
-      type        = "*"
-    }
+      principals {
+        identifiers = ["*"]
+        type        = "*"
+      }
 
-    condition {
-      test     = "Null"
-      variable = "s3:x-amz-server-side-encryption"
-      values   = ["true"]
+      condition {
+        test     = "Null"
+        variable = "s3:x-amz-server-side-encryption"
+        values   = ["true"]
+      }
     }
   }
 
