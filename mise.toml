@@ -1,0 +1,41 @@
+# https://mise.jdx.dev
+
+[tools]
+terraform = "latest"
+tflint = "latest"
+terraform-docs = "latest"
+checkov = "latest"
+
+[tasks.default]
+description = "List all available tasks"
+quiet = true
+run = "mise tasks"
+
+[tasks.fmt]
+description = "Run terraform fmt"
+run = "terraform fmt -recursive"
+
+[tasks.docs]
+description = "Generate Terraform documentation"
+run = "terraform-docs ."
+
+[tasks.test]
+description = "Run Terraform tests"
+run = "terraform test"
+
+[tasks.check]
+description = "Run the linters"
+depends = ["fmt", "test"]
+run = [
+  "terraform validate",
+  "tflint --recursive",
+  "checkov -d . --quiet --config-file .checkov.yaml",
+]
+
+[tasks.init]
+description = "Initialise terraform"
+run = ["terraform init", "tflint --init"]
+
+[tasks.plan]
+description = "Run a terraform plan"
+run = "terraform plan"
