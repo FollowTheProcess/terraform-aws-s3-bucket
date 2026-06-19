@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "default_bucket_policy" {
   }
 
   dynamic "statement" {
-    for_each = var.enforce_encryption ? [1] : [0]
+    for_each = var.enforce_encryption ? [1] : []
     content {
       sid       = "DenyUnencryptedUploads"
       effect    = "Deny"
