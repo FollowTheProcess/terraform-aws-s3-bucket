@@ -6,10 +6,13 @@
     "tflint-plugin",
     "github-actions"
   ],
-  "extends": [
-    "config:recommended"
-  ],
-  "labels": [
-    "dependencies"
+  "extends": ["config:recommended"],
+  "labels": ["dependencies"],
+  "reviewersFromCodeOwners": true,
+  "packageRules": [
+    {
+      "matchManagers": ["terraform"],
+      "rangeStrategy": "replace"
+    }
   ]
 }
