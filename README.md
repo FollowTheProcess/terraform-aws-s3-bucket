@@ -21,20 +21,20 @@ A Terraform module providing a simple, opinionated, best practice AWS S3 bucket:
 ## Requirements
 
 | Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.12 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6 |
+| ---- | ------- |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.15 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.15.0 |
+| ---- | ------- |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.51.0 |
 
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_acl.log_delivery](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_lifecycle_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
@@ -52,12 +52,13 @@ A Terraform module providing a simple, opinionated, best practice AWS S3 bucket:
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_bucket_policy_documents"></a> [bucket\_policy\_documents](#input\_bucket\_policy\_documents) | List of iam policy documents to apply to the bucket. Will be merged with default policy documents enforcing HTTPS and SSE | `list(string)` | `[]` | no |
+| <a name="input_enforce_encryption"></a> [enforce\_encryption](#input\_enforce\_encryption) | Attach the policy statements adding an explicit deny for unencrypted uploads. S3 encrypts at rest by default, this simply adds an explicit deny | `bool` | `true` | no |
 | <a name="input_force_destroy"></a> [force\_destroy](#input\_force\_destroy) | Destroy all bucket objects prior to destroying the bucket so that the bucket may be cleanly destroyed. This will cause irreversible data loss! | `bool` | `false` | no |
 | <a name="input_is_logging_bucket"></a> [is\_logging\_bucket](#input\_is\_logging\_bucket) | Whether this bucket is intended to be an access logging bucket. Enables the 'log-delivery-write' ACL if true | `bool` | `false` | no |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The ARN of a KMS CMK with which to encrypt the bucket contents. If omitted, default S3 SSE is used | `string` | `""` | no |
-| <a name="input_lifecycle_configuration"></a> [lifecycle\_configuration](#input\_lifecycle\_configuration) | Simple bucket object lifecycle configuration with configurable expiry time. If needs are more complicated, use the module output `id` to attach your own configuration | <pre>object({<br/>    enabled         = bool<br/>    expiration_days = optional(number, 30)<br/>  })</pre> | <pre>{<br/>  "enabled": true,<br/>  "expiration_days": 30<br/>}</pre> | no |
+| <a name="input_lifecycle_configuration"></a> [lifecycle\_configuration](#input\_lifecycle\_configuration) | Simple bucket object lifecycle configuration with configurable expiry time. If needs are more complicated, use the module output `id` to attach your own configuration | <pre>object({<br/>    enabled                    = bool<br/>    expiration_days            = optional(number, 30)<br/>    noncurrent_expiration_days = optional(number, 7)<br/>  })</pre> | <pre>{<br/>  "enabled": true,<br/>  "expiration_days": 30,<br/>  "noncurrent_expiration_days": 7<br/>}</pre> | no |
 | <a name="input_logging_bucket_name"></a> [logging\_bucket\_name](#input\_logging\_bucket\_name) | The name of another S3 bucket into which to write access logs for this bucket. If omitted, access logging is not enabled | `string` | `""` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name for the S3 bucket, must be globally unique | `string` | n/a | yes |
 | <a name="input_object_ownership"></a> [object\_ownership](#input\_object\_ownership) | Policy for object ownership. Valid values are `BucketOwnerEnforced`, `BucketOwnerPreferred` or `ObjectWriter` | `string` | `"BucketOwnerEnforced"` | no |
@@ -67,7 +68,7 @@ A Terraform module providing a simple, opinionated, best practice AWS S3 bucket:
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_arn"></a> [arn](#output\_arn) | The ARN of the S3 bucket |
 | <a name="output_bucket_domain_name"></a> [bucket\_domain\_name](#output\_bucket\_domain\_name) | Bucket domain name, will be of format `bucketname.s3.amazonaws.com` |
 | <a name="output_bucket_regional_domain_name"></a> [bucket\_regional\_domain\_name](#output\_bucket\_regional\_domain\_name) | The bucket region-specific domain name e.g. for a CloudFront S3 origin |

@@ -86,7 +86,22 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
       days = var.lifecycle_configuration.expiration_days
     }
 
+    noncurrent_version_expiration {
+      noncurrent_days = var.lifecycle_configuration.noncurrent_expiration_days
+    }
+
     # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration#filter
+    filter {}
+  }
+
+  rule {
+    id     = "expire-object-delete-markers"
+    status = "Enabled"
+
+    expiration {
+      expired_object_delete_marker = true
+    }
+
     filter {}
   }
 }
